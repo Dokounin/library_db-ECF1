@@ -10,12 +10,14 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class TestFixtures extends Fixture
 {
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, UserPasswordEncoderInterface $encoder)
     {
         $this->doctrine = $doctrine;
+        $this->encoder = $encoder;
     }
 
     public function load(ObjectManager $manager): void
@@ -84,7 +86,8 @@ class TestFixtures extends Fixture
             $user = new User();
             $user->setEmail($faker->email());
             $user->setRoles(['ROLE_EMPRUNTEUR']);
-            $user->setPassword($faker->sha256());
+            $password = $this->encoder->encodePassword($user, '123');
+            $user->setPassword($password);
             $user->setEnabled($faker->boolean());
 
             $date = $faker->dateTimeBetween('-6 month', '+6 month');
@@ -101,8 +104,6 @@ class TestFixtures extends Fixture
             // $date = $faker->dateTimeThisYear();
             // $date = DateTimeImmutable::createFromInterface($date);
             $user->setUpdatedAt($date);
-
-
 
             $manager->persist($user);
         }
@@ -164,7 +165,7 @@ class TestFixtures extends Fixture
             $emprunteur = new Emprunteur();
             $emprunteur->setNom($faker->userName());
             $emprunteur->setPrenom($faker->userName());
-            $emprunteur->setTel($faker->numberBetween());
+            $emprunteur->setTel($faker->numberBetween(9));
             $emprunteur->setActif($faker->boolean());
             $emprunteur->setUser($users[$i]);
 
@@ -182,7 +183,7 @@ class TestFixtures extends Fixture
             // $date = $faker->dateTimeThisYear();
             // $date = DateTimeImmutable::createFromInterface($date);
             $emprunteur->setUpdatedAt($date);
-            
+
 
 
 
