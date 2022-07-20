@@ -123,7 +123,7 @@ class TestFixtures extends Fixture
                 'actif' => true,
                 "created_at" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-01-01 10:00:00'),
                 "updated_at" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-01-01 10:00:00'),
-                "user_id" => $users[1],
+                "user" => $users[1],
             ],
             [
                 'nom' => 'bar',
@@ -132,7 +132,7 @@ class TestFixtures extends Fixture
                 'actif' => false,
                 "created_at" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-02-01 11:00:00'),
                 "updated_at" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-05-01 12:00:00'),
-                "user_id" => $users[2],
+                "user" => $users[2],
             ],
             [
                 'nom' => 'baz',
@@ -141,7 +141,7 @@ class TestFixtures extends Fixture
                 'actif' => true,
                 "created_at" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-03-01 12:00:00'),
                 "updated_at" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-03-01 12:00:00'),
-                "user_id" => $users[3],
+                "user" => $users[3],
             ],
         ];
 
@@ -153,7 +153,7 @@ class TestFixtures extends Fixture
             $emprunteur->setActif($emprunteurData['actif']);
             $emprunteur->setCreatedAt($emprunteurData['created_at']);
             $emprunteur->setUpdatedAt($emprunteurData['updated_at']);
-            $emprunteur->setUser($emprunteurData['user_id']);
+            $emprunteur->setUser($emprunteurData['user']);
 
             $manager->persist($emprunteur);
         }
