@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Auteur;
 use App\Entity\User;
 use App\Entity\Emprunteur;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,12 +22,19 @@ class DbTestController extends AbstractController
         //inspection de la liste
         dump($user);
 
-        //récupération du repository des users
+        //récupération du repository des emprenteurs
         $repository = $doctrine->getRepository(Emprunteur::class);
-        // récupération de la liste complète de toutes les users
+        // récupération de la liste complète de toutes les emprenteurs
         $emprunteur = $repository->findAll();
         //inspection de la liste
         dump($emprunteur);
+
+        //récupération du repository des auteurs
+        $repository = $doctrine->getRepository(Auteur::class);
+        // récupération de la liste complète de toutes les auteurs
+        $auteur = $repository->findAll();
+        //inspection de la liste
+        dump($auteur);
 
 
         exit();

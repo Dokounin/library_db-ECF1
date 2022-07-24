@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Auteur;
 use App\Entity\User;
 use App\Entity\Emprunteur;
 use DateTimeImmutable;
@@ -25,6 +26,7 @@ class TestFixtures extends Fixture
         $faker = FakerFactory::create("fr_FR");
         $this->loadUser($manager, $faker);
         $this->loadEmprunteur($manager, $faker);
+        $this->loadAuteur($manager, $faker);
     }
 
     public function loadUser(ObjectManager $manager, FakerGenerator $faker): void
@@ -191,6 +193,48 @@ class TestFixtures extends Fixture
             $manager->persist($emprunteur);
         }
 
+        $manager->flush();
+    }
+
+    public function loadAuteur(ObjectManager $manager, FakerGenerator $faker): void
+    {
+        $auteurDatas =
+        [
+            [
+                'nom' => 'auteur inconnu',
+                'prenom' => '',
+            ],
+            [
+                'nom' => 'Cartier ',
+                'prenom' => 'Hugues',
+            ],
+            [
+                'nom' => 'Lambert',
+                'prenom' => 'Armand',
+            ],
+            [
+                'nom' => 'Moitessier',
+                'prenom' => 'Thomas',
+            ],
+        ];
+        
+        foreach($auteurDatas as $auteurData){
+            $auteur = new Auteur();
+            $auteur->setNom($auteurData['nom']);
+            $auteur->setPrenom($auteurData['prenom']);
+
+            $manager->persist($auteur);
+        }
+
+        // boucle pour créer 500 auteur aleatoire via faker
+        for ($i = 0; $i < 500; $i++) { 
+            $auteur = new Auteur();
+            $auteur->setNom($faker->userName());
+            $auteur->setPrenom($faker->userName());
+
+            $manager->persist($auteur);
+        }
+        
         $manager->flush();
     }
 }
