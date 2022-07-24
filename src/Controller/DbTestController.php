@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Auteur;
 use App\Entity\User;
 use App\Entity\Emprunteur;
+use App\Entity\Genre;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +36,13 @@ class DbTestController extends AbstractController
         $auteur = $repository->findAll();
         //inspection de la liste
         dump($auteur);
+
+        //récupération du repository des genres
+        $repository = $doctrine->getRepository(Genre::class);
+        // récupération de la liste complète de toutes les genres
+        $genre = $repository->findAll();
+        //inspection de la liste
+        dump($genre);
 
 
         exit();

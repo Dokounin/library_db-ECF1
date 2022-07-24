@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 use App\Entity\Auteur;
 use App\Entity\User;
 use App\Entity\Emprunteur;
+use App\Entity\Genre;
+use App\Entity\Livre;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,6 +29,9 @@ class TestFixtures extends Fixture
         $this->loadUser($manager, $faker);
         $this->loadEmprunteur($manager, $faker);
         $this->loadAuteur($manager, $faker);
+        $this->loadGenre($manager, $faker);
+        $this->loadLivre($manager, $faker);
+
     }
 
     public function loadUser(ObjectManager $manager, FakerGenerator $faker): void
@@ -199,26 +204,26 @@ class TestFixtures extends Fixture
     public function loadAuteur(ObjectManager $manager, FakerGenerator $faker): void
     {
         $auteurDatas =
-        [
             [
-                'nom' => 'auteur inconnu',
-                'prenom' => '',
-            ],
-            [
-                'nom' => 'Cartier ',
-                'prenom' => 'Hugues',
-            ],
-            [
-                'nom' => 'Lambert',
-                'prenom' => 'Armand',
-            ],
-            [
-                'nom' => 'Moitessier',
-                'prenom' => 'Thomas',
-            ],
-        ];
-        
-        foreach($auteurDatas as $auteurData){
+                [
+                    'nom' => 'auteur inconnu',
+                    'prenom' => '',
+                ],
+                [
+                    'nom' => 'Cartier ',
+                    'prenom' => 'Hugues',
+                ],
+                [
+                    'nom' => 'Lambert',
+                    'prenom' => 'Armand',
+                ],
+                [
+                    'nom' => 'Moitessier',
+                    'prenom' => 'Thomas',
+                ],
+            ];
+
+        foreach ($auteurDatas as $auteurData) {
             $auteur = new Auteur();
             $auteur->setNom($auteurData['nom']);
             $auteur->setPrenom($auteurData['prenom']);
@@ -227,14 +232,119 @@ class TestFixtures extends Fixture
         }
 
         // boucle pour créer 500 auteur aleatoire via faker
-        for ($i = 0; $i < 500; $i++) { 
+        for ($i = 0; $i < 500; $i++) {
             $auteur = new Auteur();
             $auteur->setNom($faker->userName());
             $auteur->setPrenom($faker->userName());
 
             $manager->persist($auteur);
         }
-        
+
+        $manager->flush();
+    }
+
+    public function loadGenre(ObjectManager $manager, FakerGenerator $faker): void
+    {
+        $genreDatas =
+            [
+                [
+                    'nom' => 'poésie',
+                ],
+                [
+                    'nom' => 'nouvelle',
+                ],
+                [
+                    'nom' => 'roman historique',
+                ],
+                [
+                    'nom' => "roman d'amour",
+                ],
+                [
+                    'nom' => "roman d'aventure",
+                ],
+                [
+                    'nom' => 'science-fiction',
+                ],
+                [
+                    'nom' => 'fantasy',
+                ],
+                [
+                    'nom' => 'biographie',
+                ],
+                [
+                    'nom' => 'conte',
+                ],
+                [
+                    'nom' => 'témoignage',
+                ],
+                [
+                    'nom' => 'théâtre',
+                ],
+                [
+                    'nom' => 'essai',
+                ],
+                [
+                    'nom' => 'journal intime',
+                ],
+            ];
+
+        foreach ($genreDatas as $genreData) {
+            $genre = new Genre();
+            $genre->setNom($genreData['nom']);
+            $genre->setDescription(null);
+
+            $manager->persist($genre);
+        }
+
+        $manager->flush();
+    }
+
+    public function loadLivre(ObjectManager $manager, FakerGenerator $faker): void
+    {
+        $repository = $this->doctrine->getRepository(Auteur::class);
+        $auteur = $repository->findAll();
+
+        $livreDatas = [
+            [
+                'titre' => 'Lorem ipsum dolor sit amet',
+                'anne_edition' => 2010,
+                'nombre_pages' => 100,
+                'code_isbn' => '9785786930024',
+                'auteur' => $auteur[0],
+            ],
+            [
+                'titre' => 'Consectetur adipiscing elit',
+                'anne_edition' => 2011,
+                'nombre_pages' => 150,
+                'code_isbn' => '9783817260935',
+                'auteur' => $auteur[1],
+            ],
+            [
+                'titre' => 'Mihi quidem Antiochum',
+                'anne_edition' => 2012,
+                'nombre_pages' => 200,
+                'code_isbn' => '9782020493727',
+                'auteur' => $auteur[2],
+            ],
+            [
+                'titre' => 'Quem audis satis belle ',
+                'anne_edition' => 2013,
+                'nombre_pages' => 250,
+                'code_isbn' => '9794059561353',
+                'auteur' => $auteur[3],
+            ],
+        ];
+
+        foreach($livreDatas as $livreData){
+            $livre = new Livre();
+            $livre->setAnneEdition($livreData['anne_edition']);
+            $livre->setNombresPages($livreData['nombre_pages']);
+            $livre->setCodeIsbn($livreData['code_isbn']);
+            $livre->setAuteur($livreData['auteur']);
+
+            $manager->persist($livre);
+        }
+
         $manager->flush();
     }
 }
