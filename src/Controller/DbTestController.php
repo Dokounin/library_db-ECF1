@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Auteur;
+use App\Entity\Emprunt;
 use App\Entity\User;
 use App\Entity\Emprunteur;
 use App\Entity\Genre;
@@ -31,12 +32,6 @@ class DbTestController extends AbstractController
         //inspection de la liste
         dump($emprunteur);
 
-        //récupération du repository des livres
-        $repository = $doctrine->getRepository(Livre::class);
-        // récupération de la liste complète de toutes les livres
-        $livre = $repository->findAll();
-        //inspection de la liste
-        dump($livre);
 
         //récupération du repository des auteurs
         $repository = $doctrine->getRepository(Auteur::class);
@@ -51,6 +46,20 @@ class DbTestController extends AbstractController
         $genre = $repository->findAll();
         //inspection de la liste
         dump($genre);
+
+        //récupération du repository des livres
+        $repository = $doctrine->getRepository(Livre::class);
+        // récupération de la liste complète de toutes les livres
+        $livre = $repository->findAll();
+        //inspection de la liste
+        dump($livre);
+
+        //récupération du repository des emprunts
+        $repository = $doctrine->getRepository(Emprunt::class);
+        // récupération de la liste complète de toutes les emprunts
+        $emprunt = $repository->findAll();
+        //inspection de la liste
+        dump($emprunt);
 
 
 

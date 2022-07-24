@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Auteur;
+use App\Entity\Emprunt;
 use App\Entity\User;
 use App\Entity\Emprunteur;
 use App\Entity\Genre;
@@ -31,6 +32,7 @@ class TestFixtures extends Fixture
         $this->loadAuteur($manager, $faker);
         $this->loadGenre($manager, $faker);
         $this->loadLivre($manager, $faker);
+        $this->loadEmprunt($manager, $faker);
     }
 
     public function loadUser(ObjectManager $manager, FakerGenerator $faker): void
@@ -347,6 +349,64 @@ class TestFixtures extends Fixture
             $livre->addGenre($genre);
 
             $manager->persist($livre);
+        }
+
+        $manager->flush();
+    }
+
+    public function loadEmprunt(ObjectManager $manager, FakerGenerator $faker): void
+    {
+        $repository = $this->doctrine->getRepository(Emprunteur::class);
+        $emprunteurs = $repository->findAll();
+
+        $repository = $this->doctrine->getRepository(Livre::class);
+        $livres = $repository->findAll();
+
+        $empruntDatas =
+            [
+                [
+                    "date_emprunt" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2020-02-01 10:00:00"),
+                    "date_retour" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2020-03-01 10:00:00"),
+                    "emprunteur" => $emprunteurs[0],
+                    "livre" => $livres[0],
+                ],
+                [
+                    "date_emprunt" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2020-03-01 10:00:00"),
+                    "date_retour" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2020-04-01 10:00:00"),
+                    "emprunteur" => $emprunteurs[1],
+                    "livre" => $livres[1],
+                ],
+                [
+                    "date_emprunt" => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2020-04-01 10:00:00"),
+                    "date_retour" => null,
+                    "emprunteur" => $emprunteurs[2],
+                    "livre" => $livres[2],
+                ],
+            ];
+
+        foreach ($empruntDatas as $empruntData) {
+            $emprunt = new Emprunt();
+            $emprunt->setDateEmprunt($empruntData["date_emprunt"]);
+            $emprunt->setDateRetour($empruntData["date_retour"]);
+            $emprunt->setEmprunteur($empruntData['emprunteur']);
+            $emprunt->setLivre($empruntData['livre']);
+
+            $manager->persist($emprunt);
+        }
+
+        for ($i = 0; $i < 200; $i++) {
+            $emprunt = new Emprunt();
+            $date = $faker->dateTimeBetween('-6 month', '+6 month');
+            // format : YYYY-mm-dd HH:ii:ss
+            $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2021-{$date->format('m-d H:i:s')}");
+            $emprunt->setDateEmprunt($date);
+            $emprunt->setDateRetour(null);
+            $emprunteur = $faker->randomElements($emprunteurs)[0];
+            $emprunt->setEmprunteur($emprunteur);
+            $livre = $faker->randomElements($livres)[0];
+            $emprunt->setLivre($livre);
+
+            $manager->persist($emprunt);
         }
 
         $manager->flush();
