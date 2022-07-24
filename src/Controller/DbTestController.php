@@ -6,6 +6,7 @@ use App\Entity\Auteur;
 use App\Entity\User;
 use App\Entity\Emprunteur;
 use App\Entity\Genre;
+use App\Entity\Livre;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,13 @@ class DbTestController extends AbstractController
         //inspection de la liste
         dump($emprunteur);
 
+        //récupération du repository des livres
+        $repository = $doctrine->getRepository(Livre::class);
+        // récupération de la liste complète de toutes les livres
+        $livre = $repository->findAll();
+        //inspection de la liste
+        dump($livre);
+
         //récupération du repository des auteurs
         $repository = $doctrine->getRepository(Auteur::class);
         // récupération de la liste complète de toutes les auteurs
@@ -43,6 +51,8 @@ class DbTestController extends AbstractController
         $genre = $repository->findAll();
         //inspection de la liste
         dump($genre);
+
+
 
 
         exit();
