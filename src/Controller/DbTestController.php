@@ -9,9 +9,11 @@ use App\Entity\Emprunteur;
 use App\Entity\Genre;
 use App\Entity\Livre;
 use App\Repository\AuteurRepository;
+use App\Repository\EmprunteurRepository;
 use App\Repository\GenreRepository;
 use App\Repository\LivreRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,7 +77,7 @@ class DbTestController extends AbstractController
     //todo          Les requêtes
 
     #[Route('/db/test/requests', name: 'app_db_test_requests')]
-    public function requests(UserRepository $userRepository, LivreRepository $livreRepository, GenreRepository $genreRepository, AuteurRepository $auteurRepository, ManagerRegistry $doctrine): Response
+    public function requests(UserRepository $userRepository, LivreRepository $livreRepository, GenreRepository $genreRepository, AuteurRepository $auteurRepository, ManagerRegistry $doctrine, EmprunteurRepository $emprunteurRepository): Response
     {
         //! Les utilisateurs
 
@@ -175,7 +177,7 @@ class DbTestController extends AbstractController
 
         // enregistrement de la modification dans la BDD
         $manager->flush();
-        
+
         dump($livre2);
 
         // * Requêtes de suppression :
@@ -188,6 +190,40 @@ class DbTestController extends AbstractController
             $manager->flush();
         }
         dump($livre3);
+
+        //! Les Emprunteurs :
+
+        //* Requêtes de lecture :
+
+        // la liste complète de tous les emprunteurs
+        $emprunteurs = $emprunteurRepository->findAll();
+        dump($emprunteurs);
+
+        // les données de l'emprunteur dont l'id est `3`
+        $emprunteur = $emprunteurRepository->find(3);
+        dump($emprunteur);
+
+        // les données de l'emprunteur qui est relié au user dont l'id est `3`
+        $user = $userRepository->find(3);
+        $emprunteur = $emprunteurRepository->findByUser($user);
+        dump($emprunteur);
+
+        // la liste des emprunteurs dont le nom ou le prénom contient le mot clé `foo`
+        $emprunteur = $emprunteurRepository->findByKeyword('foo');
+        dump($emprunteur);
+
+        // la liste des emprunteurs dont le téléphone contient le mot clé `1234`
+        $emprunteur = $emprunteurRepository->findByKeywordPhone('1234');
+        dump($emprunteur);
+
+        // la liste des emprunteurs dont la date de création est antérieure au 01/03/2021 exclu (c-à-d strictement plus petit)
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', '2021-03-01 00:00:00');
+        $emprunteurs = $emprunteurRepository->findByPublishedAtBefore($date);
+        dump($emprunteurs);
+
+        // la liste des emprunteurs inactifs (c-à-d dont l'attribut `actif` est égal à `false`)
+        $emprunteurs = $emprunteurRepository->findByIsNotActif('false');
+        dump($emprunteurs);
 
         exit();
     }
