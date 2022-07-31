@@ -8,6 +8,10 @@ use App\Entity\User;
 use App\Entity\Emprunteur;
 use App\Entity\Genre;
 use App\Entity\Livre;
+use App\Repository\AuteurRepository;
+use App\Repository\GenreRepository;
+use App\Repository\LivreRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,6 +64,71 @@ class DbTestController extends AbstractController
         $emprunt = $repository->findAll();
         //inspection de la liste
         dump($emprunt);
+
+
+
+
+        exit();
+    }
+
+
+    //todo          Les requêtes
+
+    #[Route('/db/test/requests', name: 'app_db_test_requests')]
+    public function requests(UserRepository $userRepository, LivreRepository $livreRepository, GenreRepository $genreRepository, AuteurRepository $auteurRepository): Response
+    {
+        //! Les utilisateurs
+
+        // récupération de la liste complète de toutes les users
+        $users = $userRepository->findAll();
+        //inspection de la liste
+        dump($users);
+
+        // récupération d'un objet à partir de son id
+        $id = 1;
+        $user = $userRepository->find($id);
+        dump($user);
+
+        // récupération d'un objet à partir de mots cles
+        $user = $userRepository->findByKeyword('foo.foo@example.com');
+        dump($user);
+
+        $role = 'ROLE_EMPRUNTEUR';
+        $users = $userRepository->findByRoles($role);
+        dump($users);
+
+        //! Les livres
+
+        $livres = $livreRepository->findAll();
+        dump($livres);
+
+        $id = 1;
+        $livre = $livreRepository->find($id);
+        dump($livre);
+
+        $livre = $livreRepository->findByKeyword('Lorem');
+        dump($livre);
+
+
+        $auteur = $auteurRepository->find(2);
+        $livre = $auteur->getNom();
+        $livre = $livreRepository->findByAuteur($auteur);
+        dump($livre);
+
+
+        $livres = $livreRepository->findByGenreKeyword('roman');
+        dump($livres);
+        
+        foreach ($livres as $livre){
+            dump($livre);
+
+            $genres = $livre->getGenres();
+
+            foreach($genres as $genre) {
+                dump($genre);
+            }
+        }
+        
 
 
 
