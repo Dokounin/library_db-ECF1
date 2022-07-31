@@ -10,6 +10,7 @@ use App\Entity\Genre;
 use App\Entity\Livre;
 use App\Repository\AuteurRepository;
 use App\Repository\EmprunteurRepository;
+use App\Repository\EmpruntRepository;
 use App\Repository\GenreRepository;
 use App\Repository\LivreRepository;
 use App\Repository\UserRepository;
@@ -77,7 +78,7 @@ class DbTestController extends AbstractController
     //todo          Les requêtes
 
     #[Route('/db/test/requests', name: 'app_db_test_requests')]
-    public function requests(UserRepository $userRepository, LivreRepository $livreRepository, GenreRepository $genreRepository, AuteurRepository $auteurRepository, ManagerRegistry $doctrine, EmprunteurRepository $emprunteurRepository): Response
+    public function requests(UserRepository $userRepository, LivreRepository $livreRepository, GenreRepository $genreRepository, AuteurRepository $auteurRepository, ManagerRegistry $doctrine, EmprunteurRepository $emprunteurRepository, EmpruntRepository $empruntRepository): Response
     {
         //! Les utilisateurs
 
@@ -154,7 +155,6 @@ class DbTestController extends AbstractController
         // récupération de l'Entity Manager
         $manager = $doctrine->getManager();
         // demande d'enregistrement de l'objet dans la BDD
-        $manager->persist($livre1);
         $manager->flush();
         dump($livre1);
 
@@ -224,6 +224,75 @@ class DbTestController extends AbstractController
         // la liste des emprunteurs inactifs (c-à-d dont l'attribut `actif` est égal à `false`)
         $emprunteurs = $emprunteurRepository->findByIsNotActif('false');
         dump($emprunteurs);
+
+        //! Les Emprunt :
+
+        //* Requêtes de lecture :
+
+        // la liste des 10 derniers emprunts au niveau chronologique 'en cours' ?
+
+        // la liste des emprunts de l'emprunteur dont l'id est `2`
+        $emprunteur = $emprunteurRepository->find(2);
+        $emprunt = $empruntRepository->findByEmprunteur($emprunteur);
+        dump($emprunt);
+
+        // la liste des emprunts du livre dont l'id est `3`
+        $livre = $livreRepository->find(3);
+        $emprunt = $empruntRepository->findByLivre($livre);
+        dump($emprunt);
+
+        // la liste des emprunts qui ont été retournés avant le 01/01/2021
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', '2021-01-01 00:00:00');
+        $emprunt = $empruntRepository->findByDateRetourBefore($date);
+        dump($emprunt);
+
+        // la liste des emprunts qui n'ont pas encore été retournés (c-à-d dont la date de retour est nulle)
+        $emprunts = $empruntRepository->findByDateRetourIsNull();
+        dump($emprunts);
+
+        // les données de l'emprunt du livre dont l'id est `3` et qui n'a pas encore été retournés (c-à-d dont la date de retour est nulle)
+        $livre = $livreRepository->find(3);
+        $emprunt = $empruntRepository->findByLivreIsNull($livre);
+        dump($emprunt);
+
+        // * Requêtes de création :
+
+        // récupération de l'Entity Manager
+        $manager = $doctrine->getManager();
+
+        // création d'un nouvel objet Emprunt
+        $emprunt1 = new Emprunt();
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', '2020-12-01 16:00:00');
+        $emprunt1->setDateEmprunt($date);
+        $emprunt1->setDateRetour(null);
+        $emprunteur = $emprunteurRepository->find(1);
+        $emprunt1->setEmprunteur($emprunteur);
+        $livre = $livreRepository->find(1);
+        $emprunt1->setLivre($livre);
+
+
+        $manager->flush();
+
+        //* Requêtes de mise à jour :
+
+        $emprunt2 = $empruntRepository->find(3);
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', '2020-05-01 10:00:00');
+        $emprunt2->setDateRetour($date);
+
+        $manager->flush();
+        dump($emprunt2);
+
+        // * Requêtes de suppression :
+
+        $id = 42;
+        $emprunt3 = $empruntRepository->find($id);
+
+        if ($emprunt3) {
+            // suppression d'un objet
+            $manager->remove($emprunt3);
+            $manager->flush();
+        }
+        dump($emprunt3);
 
         exit();
     }
