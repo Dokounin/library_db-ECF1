@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}detail de l'emprunteur{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_emprunteur') }}">back to list</a>
+<h1>Details de l'emprunteur {{emprunteur.id}}</h1>
+<ul>
+<li>{{emprunteur.nom}}{{emprunteur.prenom}}</li>
+<li>{{emprunteur.tel}}</li>
+</ul>
+{% if emprunteur.emprunts|length == 0 %}
+<p>Aucun emprunt enregistré</p>
+{% else %}
+    <p>Liste des emprunts :</p>
+<ul>
+{% for emprunt in emprunteur.emprunts %}
+<li>Le {{emprunt.dateEmprunt|date('d-m-Y')}}</li>
+    <li>{{emprunt.book.title}}</li>
+    {% if emprunt.dateRetour == null %}
+        <li>Non rendu</li>
+        {% else %}
+        <li> Rendu le {{emprunt.dateRetour|date('d-m-Y')}}</li>
+    {% endif %}
+{% endfor %}
+</ul>
+{% endif %}
+<ul>
+<li>{{emprunteur.createdAt|date('d-m-Y')}}</li>
+<li>{{emprunteur.updatedAt|date('d-m-Y')}}</li>
+</ul>
+<a href="{{path('app_admin_emprunteur_edit', {id:emprunteur.id})}}">Editer cet emprunt</a>
+
+    {{ include('admin_emprunteur/_delete_form.html.twig') }}
+
+{% endblock %}

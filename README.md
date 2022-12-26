@@ -3,4 +3,4 @@
 
 ## Schéma en UML
 
-![Shema en UML library_db.](/image/projet-biblioth%C3%A8que-esf(1).png)
+![Schéma en UML library_db.](/image/projet-biblioth%C3%A8que-esf(1).png)

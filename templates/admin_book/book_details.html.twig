@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block title %}detail du livre{% endblock %}
+
+{% block body %}
+<a href="{{ path('app_admin_book') }}">back to list</a>
+<h1>Detail de {{book.title}}</h1>
+<ul>
+<li>Titre : {{book.title}}</li>
+
+{% if  book.emprunts|length == 0 %}
+<li> disponible </li>
+{% endif %}
+{% for emprunt in book.emprunts %}
+{% if emprunt.dateRetour == null %}
+<li> indisponible </li>
+{% else %}
+    <li> disponible </li>
+
+{% endif %}
+{% endfor %}
+<li>année d'édition : {{book.anneeEdition}}</li>
+<li>nombre de pages : {{book.nombrePages}}</li>
+<li>code ISBN: {{book.codeIsbn}}</li>
+<li>cote : {{book.Id}}</li>
+
+    <li>Auteur : {{auteurs.nom}} {{auteurs.prenom}}</li>
+
+ Genre(s) :</li>
+{% for genre in book.genres %}
+ <li>   {{genre.nom}}</li>
+{% endfor %}
+</ul>
+<a href="{{path('app_admin_book_edit', {id:book.id})}}">Editer ce livre</a>
+
+    {{ include('admin_book/_delete_form.html.twig') }}
+
+{% endblock %}

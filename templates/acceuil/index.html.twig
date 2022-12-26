@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acceuil{% endblock %}
+
+{% block body %}
+<main>
+    <section class='mx-4 row'>
+    Acceuil
+    {{form(form)}}
+    </section>
+    {% if books|length == 0 %}
+    <p>Aucun resultats</p>
+    <a class='btn btn-primary' href={{path('acceuil')}}>Retour à la liste de livre</a>
+    {% else %}
+    <ul>
+    {% for book in books %}
+        <li><a href='{{path('book_details',{"id":book.id})}}'>{{book.title}}</a></li>
+        {% if  book.emprunts|length == 0 %}
+<li> disponible </li>
+{% endif %}
+{% for emprunt in book.emprunts %}
+{% if emprunt.dateRetour == null %}
+<li> indisponible </li>
+{% else %}
+    <li> disponible </li>
+
+{% endif %}
+{% endfor %}
+{% endfor %}
+    </ul>
+    {% endif %}
+</main>
+{% endblock %}

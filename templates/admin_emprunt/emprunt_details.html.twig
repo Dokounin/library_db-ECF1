@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}detail de l'emprunt{% endblock %}
+
+{% block body %}
+    <a href="{{path('app_admin_emprunt')}}">back to list</a>
+<h1>Details de l'emprunt {{emprunt.id}}</h1>
+<ul>
+<li> Emprunté par {{emprunt.emprunteur.nom}} {{emprunt.emprunteur.prenom}} </li>
+<li>Emprunté le {{emprunt.dateEmprunt|date('d-m-Y') }}</li>
+{% if emprunt.dateRetour == null %}
+<li>Non rendu</li>
+{% else %}
+   <li>Rendu le {{emprunt.dateRetour|date('d-m-Y')}}</li> 
+{% endif %}
+</ul>
+<a href="{{path('app_admin_emprunt_edit', {id:emprunt.id})}}">Editer l'emprunt</a>
+
+    {{ include('admin_emprunt/_delete_form.html.twig') }}
+    {% if emprunt.dateRetour == null %}
+    {{ include('admin_emprunt/_retour_form.html.twig') }}
+    {% endif %}
+    
+
+{% endblock %}

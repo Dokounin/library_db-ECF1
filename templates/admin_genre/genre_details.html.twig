@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}detail du genre{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_genre') }}">back to list</a>
+<h1>Details du genre {{genre.id}}</h1>
+<ul>
+<li>{{genre.nom}}</li>
+{% if genre.description != null %}
+<li>{{genre.description}}</li>
+{% endif %}
+
+{% for book in genre.books %}
+    <li>{{book.title}}</li>
+{% endfor %}
+</ul>
+<a href="{{path('app_admin_genre_edit', {id:genre.id})}}">Editer ce genre</a>
+
+    {{ include('admin_genre/_delete_form.html.twig') }}
+
+{% endblock %}

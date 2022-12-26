@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}detail de l'utilisateur{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_admin_user') }}">back to list</a>
+<h1>Details de l'utilisateur {{user.id}}</h1>
+<ul>
+<li>{{user.email}}</li>
+<li>{{user.createdAt|date('d-m-Y')}}</li>
+<li>{{user.updatedAt|date('d-m-Y')}}</li>
+</ul>
+<a href="{{path('app_admin_user_edit', {id:user.id})}}">Editer cet utilisateur</a>
+
+    {{ include('admin_user/_delete_form.html.twig') }}
+
+{% endblock %}

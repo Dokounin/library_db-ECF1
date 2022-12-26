@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des livres{% endblock %}
+
+{% block body %}
+ <a class='btn btn-primary' href="{{ path('app_admin_auteur_new') }}">Enregistrer un nouvel auteur</a>
+<ul>
+{% for auteur in auteurs %}
+    <li><a href=" {{ path('app_admin_auteur_show',{"id":auteur.id}) }}">{{auteur.prenom}} {{auteur.nom}}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

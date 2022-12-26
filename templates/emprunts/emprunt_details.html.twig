@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<h1>{{emprunt.book.title}}</h1>
+<ul>
+<li> Emprunté par {{emprunt.emprunteur.nom}} {{emprunt.emprunteur.prenom}} </li>
+<li>Emprunté le {{emprunt.dateEmprunt|date('d-m-Y') }}</li>
+{% if emprunt.dateRetour == null %}
+<li>Non rendu</li>
+{% else %}
+   <li>Rendu le {{emprunt.dateRetour|date('d-m-Y')}}</li> 
+{% endif %}
+</ul>
+{% endblock %}

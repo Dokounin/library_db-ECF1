@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}modification de l'emprunteur{% endblock %}
+{% block body %}
+    <h1>modification de l'emprunteur {{emprunteur.id}}</h1>
+
+    {{ include('admin_emprunteur/_form.html.twig') }}
+
+    <a href="{{ path('app_admin_emprunteur') }}">back to list</a>
+
+
+{% endblock %}

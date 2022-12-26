@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration du genre{% endblock %}
+
+{% block body %}
+        <a class='btn btn-primary' href="{{ path('app_admin_genre_new') }}">Enregistrer un nouveau genre</a>
+<ul>
+{% for genre in genres %}
+    <li><a href="{{ path('app_admin_genre_show',{"id":genre.id}) }}">{{genre.nom}}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

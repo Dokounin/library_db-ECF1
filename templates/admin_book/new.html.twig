@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouveaux livre{% endblock %}
+{% block body %}
+    <h1>Créé un nouveau livre</h1>
+
+    {{ include('admin_book/_form.html.twig') }}
+
+    <a href="{{ path('app_admin_book') }}">back to list</a>
+{% endblock %}

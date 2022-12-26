@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1>Detail de {{book.title}}</h1>
+<ul>
+<li>Titre : {{book.title}}</li>
+
+{% if  book.emprunts|length == 0 %}
+<li> disponible </li>
+{% endif %}
+{% for emprunt in book.emprunts %}
+{% if emprunt.dateRetour == null %}
+<li> indisponible </li>
+{% else %}
+    <li> disponible </li>
+
+{% endif %}
+{% endfor %}
+<li>année d'édition : {{book.anneeEdition}}</li>
+<li>nombre de pages : {{book.nombrePages}}</li>
+<li>code ISBN: {{book.codeIsbn}}</li>
+<li>cote : {{book.Id}}</li>
+
+    <li>Auteur : {{auteurs.nom}} {{auteurs.prenom}}</li>
+
+
+{% for genre in book.genres %}
+    <li>Genre(s) : {{genre.nom}}</li>
+{% endfor %}
+</ul>
+{% endblock %}

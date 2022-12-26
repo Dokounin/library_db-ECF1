@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emprunts{% endblock %}
+
+{% block body %}
+
+{% if is_granted('ROLE_ADMIN')  %}
+<h1>Bonjour Admin</h1>
+<p>Liste des emprunts</p>
+<ul>
+{% for emprunt in emprunts %}
+<li><a href='{{path('emprunts_details',{"id":emprunt.id})}}'>{{emprunt.book.title}}</a> Emprunté par {{emprunt.emprunteur.nom}} {{emprunt.emprunteur.prenom}} </li>
+{% if emprunt.dateRetour == null %}
+<li>Non rendu</li>
+{% else %}
+   <li>rendu le {{emprunt.dateRetour|date('d-m-Y')}}</li> 
+{% endif %}
+
+{% endfor %}
+</ul>
+{% elseif is_granted('ROLE_EMPRUNTEUR')  %}
+<h1>Bonjour {{emprunteur.nom}}</h1>
+<p>Liste de vos emprunts</p>
+<ul>
+{% for emprunt in emprunts %}
+<li><a href='{{path('emprunts_details',{"id":emprunt.id})}}'> {{emprunt.book.title}} </a></li>
+{% if emprunt.dateRetour == null %}
+<li>Non rendu</li>
+{% else %}
+   <li>rendu le {{emprunt.dateRetour|date('d-m-Y')}}</li> 
+{% endif %}
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

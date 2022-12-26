@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des emprunteur{% endblock %}
+
+{% block body %}
+<ul>
+        <a class='btn btn-primary' href="{{ path('app_admin_emprunteur_new') }}">Enregistrer un nouvel emprunteur</a>
+{% for emprunteur in emprunteurs %}
+    <li><a href=" {{ path('app_admin_emprunteur_show',{"id":emprunteur.id}) }}">{{emprunteur.prenom}} {{emprunteur.nom}}</a></li>
+    {% if emprunteur.actif == false %}
+    <li>Innactif</li>
+    {% else %}
+        <li>Actif</li>
+        
+    {% endif %}
+{% endfor %}
+</ul>
+{% endblock %}
