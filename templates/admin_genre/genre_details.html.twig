@@ -10,8 +10,8 @@
 <li>{{genre.description}}</li>
 {% endif %}
 
-{% for book in genre.books %}
-    <li>{{book.title}}</li>
+{% for livre in genre.livres %}
+    <li>{{livre.titre}}</li>
 {% endfor %}
 </ul>
 <a href="{{path('app_admin_genre_edit', {id:genre.id})}}">Editer ce genre</a>

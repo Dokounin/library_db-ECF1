@@ -6,7 +6,7 @@
         <a class='btn btn-primary' href="{{ path('app_admin_emprunt_new') }}">Enregistrer un nouvel emprunt</a>
 <ul>
 {% for emprunt in emprunts %}
-    <li><a href='{{path('app_admin_emprunt_show',{"id":emprunt.id})}}'>{{emprunt.book.title}}</a> Emprunté par {{emprunt.emprunteur.nom}} {{emprunt.emprunteur.prenom}} </li>
+    <li><a href='{{path('app_admin_emprunt_show',{"id":emprunt.id})}}'>{{emprunt.livre.titre}}</a> Emprunté par {{emprunt.emprunteur.nom}} {{emprunt.emprunteur.prenom}} </li>
 {% if emprunt.dateRetour == null %}
 <li>Non rendu</li>
 {% else %}

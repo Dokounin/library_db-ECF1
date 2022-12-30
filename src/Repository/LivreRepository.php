@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Auteur;
+use App\Entity\Emprunt;
 use App\Entity\Genre;
 use App\Entity\Livre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * @extends ServiceEntityRepository<Livre>
@@ -40,72 +42,111 @@ class LivreRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
     /**
-     * @return Livre[] Returns an array of Livre objects
+     * @return Livre[] Returns an array of Book objects
      */
-    public function findByKeyword($keyword): array
+    public function findByKeyword(string $keyword): array
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.titre LIKE :keyword')
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.titre LIKE :keyword')
             ->setParameter('keyword', "%{$keyword}%")
-            ->orderBy('l.id', 'ASC')
+            ->orderBy('b.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
+    /**
+     * @return Livre[] Returns an array of Book objects
+     */
+    public function findByAuteur(Auteur $auteurId): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.auteur', 'a')
+            ->andWhere('a.id= :auteurId')
+            ->setParameter('auteurId', $auteurId->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByGenre(Genre $genre): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join("b.genres", "g")
+            ->andWhere("g.id = :gId")
+            ->setParameter('gId', $genre->getId())
+            ->orderBy('b.id')
+            ->getQuery()
+            ->getResult();
+    }
+    /**
+     * @return Livre[] Returns an array of Book objects
+     */
 
     /**
-     * @return Livre[] Returns an array of Livre objects
+     * @return Livre[] Returns an array of Book objects
      */
-    public function findByAuteur(Auteur $auteur)
+    public function findByKeywordGenre(string $value): array
     {
-        return $this->createQueryBuilder('l')
-            // faire une jointure avec l'utilisateur associé au profil auteur
-            ->join('l.auteur', 'a')
-            // ne retenir que le profil auteur qui est associé a l'utilisateur passé en paramètre de la fonction
-            ->andWhere('a.id = :auteurId')
-            ->setParameter('auteurId', $auteur->getId())
-            // exécution de la requête
+        return $this->createQueryBuilder('b')
+            ->join("b.genres", "g")
+            ->andWhere('g.nom LIKE :val')
+            ->setParameter('val', "%{$value}%")
+            ->orderBy('b.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
-
+    public function findOneByEmprunt(Emprunt $emprunt): ?Livre
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.emprunts', 'e')
+            ->andWhere('e.id = :empruntId')
+            ->setParameter('empruntId', $emprunt->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
     /**
-     * @return Livre[] Returns an array of Livre objects
+     * @return Livre[] Returns an array of Book objects
      */
-    public function findByGenreKeyword($keyword)
+    public function filter(?string $mot): array
     {
-        return $this->createQueryBuilder('l')
-            ->join('l.genres', 'g')
-            ->andWhere('g.nom LIKE :keyword')
-            ->setParameter('keyword', "%{$keyword}%")
-            ->orderBy('l.titre', 'ASC')
-            ->getQuery()
-            ->getResult();
+        if ($mot == null) {
+            return $this->createQueryBuilder('b')
+                ->orderBy('b.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+        } else {
+            return $this->createQueryBuilder('b')
+                ->join('b.auteur', 'a')
+                ->andWhere('b.titre LIKE :keyword')
+                ->orWhere('a.nom LIKE :keyword')
+                ->orWhere('b.code_isbn= :Isbn')
+                ->setParameter('keyword', "%{$mot}%")
+                ->setParameter('Isbn', $mot)
+                ->orderBy('b.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+        }
     }
-
-
 
 
     //    /**
-    //     * @return Livre[] Returns an array of Livre objects
+    //     * @return Livre[] Returns an array of Book objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
+    //        return $this->createQueryBuilder('b')
+    //            ->andWhere('b.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
+    //            ->orderBy('b.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Livre
+    //    public function findOneBySomeField($value): ?Book
     //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
+    //        return $this->createQueryBuilder('b')
+    //            ->andWhere('b.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<h1>Detail de {{book.title}}</h1>
+<h1>Detail de {{livre.titre}}</h1>
 <ul>
-<li>Titre : {{book.title}}</li>
+<li>Titre : {{livre.titre}}</li>
 
-{% if  book.emprunts|length == 0 %}
+{% if  livre.emprunts|length == 0 %}
 <li> disponible </li>
 {% endif %}
-{% for emprunt in book.emprunts %}
+{% for emprunt in livre.emprunts %}
 {% if emprunt.dateRetour == null %}
 <li> indisponible </li>
 {% else %}
@@ -15,15 +15,15 @@
 
 {% endif %}
 {% endfor %}
-<li>année d'édition : {{book.anneeEdition}}</li>
-<li>nombre de pages : {{book.nombrePages}}</li>
-<li>code ISBN: {{book.codeIsbn}}</li>
-<li>cote : {{book.Id}}</li>
+<li>année d'édition : {{livre.anneEdition}}</li>
+<li>nombre de pages : {{livre.nombresPages}}</li>
+<li>code ISBN: {{livre.codeIsbn}}</li>
+<li>cote : {{livre.Id}}</li>
 
     <li>Auteur : {{auteurs.nom}} {{auteurs.prenom}}</li>
 
 
-{% for genre in book.genres %}
+{% for genre in livre.genres %}
     <li>Genre(s) : {{genre.nom}}</li>
 {% endfor %}
 </ul>

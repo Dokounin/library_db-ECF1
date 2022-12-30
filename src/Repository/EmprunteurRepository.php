@@ -4,10 +4,11 @@ namespace App\Repository;
 
 use App\Entity\Emprunteur;
 use App\Entity\User;
-use DateInterval;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+
+
 
 /**
  * @extends ServiceEntityRepository<Emprunteur>
@@ -45,13 +46,14 @@ class EmprunteurRepository extends ServiceEntityRepository
     /**
      * @return Emprunteur[] Returns an array of Emprunteur objects
      */
-    public function findByUser(User $user): array
+    public function findByKeyword(string $keyword): array
     {
         return $this->createQueryBuilder('e')
-            ->join('e.user', 'u')
-            ->andWhere('u.id = :userId')
-            ->setParameter('userId', $user->getId())
+            ->where('e.nom LIKE :val')
+            ->orWhere('e.prenom LIKE :val')
+            ->setParameter('val', "%{$keyword}%")
             ->orderBy('e.id', 'ASC')
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
@@ -59,12 +61,13 @@ class EmprunteurRepository extends ServiceEntityRepository
     /**
      * @return Emprunteur[] Returns an array of Emprunteur objects
      */
-    public function findByKeyword($keyword): array
+    public function findByTel(string $telNum): array
     {
         return $this->createQueryBuilder('e')
-            ->Where('e.nom LIKE :keyword')
-            ->orWhere('e.prenom LIKE :keyword')
-            ->setParameter('keyword', "%{$keyword}%")
+            ->andWhere('e.tel LIKE :val')
+            ->setParameter('val', "%{$telNum}%")
+            ->orderBy('e.id', 'ASC')
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
@@ -72,46 +75,39 @@ class EmprunteurRepository extends ServiceEntityRepository
     /**
      * @return Emprunteur[] Returns an array of Emprunteur objects
      */
-    public function findByKeywordPhone($keyword): array
+    public function findByCreatedAt(DateTime $createdAt): array
     {
         return $this->createQueryBuilder('e')
-            ->Where('e.tel LIKE :keyword')
-            ->setParameter('keyword', "%{$keyword}%")
+            ->andWhere('e.created_at < :createdAt')
+            ->setParameter('createdAt', $createdAt)
+            ->orderBy('e.id', 'ASC')
+
             ->getQuery()
             ->getResult();
     }
-
     /**
      * @return Emprunteur[] Returns an array of Emprunteur objects
      */
-    public function findByPublishedAtBefore(DateTime $date): array
+    public function isActif(): array
     {
-        // création d'un intervalle de 1 jour
-        $interval = DateInterval::createFromDateString('1 day');
-        // ajout d'un jour à la date
-        $date = $date->add($interval);
-
         return $this->createQueryBuilder('e')
-            ->andWhere('e.created_at <= :date')
-            ->setParameter('date', $date->format('Y-m-d 00:00:00'))
-            ->orderBy('e.created_at', 'ASC')
-            ->addOrderBy('e.nom', 'ASC')
+            ->andWhere('e.actif = 1')
+
+            ->orderBy('e.id', 'ASC')
+
             ->getQuery()
             ->getResult();
     }
 
-         /**
-        * @return Emprunteur[] Returns an array of Emprunteur objects
-        */
-        public function findByIsNotActif($value): array
-        {
-            return $this->createQueryBuilder('e')
-                ->andWhere('e.actif = :val')
-                ->setParameter('val', $value)
-                ->getQuery()
-                ->getResult()
-            ;
-        }
+    public function findByUser(User $user): ?Emprunteur
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.user = :val')
+            ->setParameter('val', $user->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 
     //    /**
     //     * @return Emprunteur[] Returns an array of Emprunteur objects

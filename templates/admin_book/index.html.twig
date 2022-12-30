@@ -5,8 +5,8 @@
 {% block body %}
         <a class='btn btn-primary' href="{{ path('app_admin_book_new') }}">Enregistrer un nouveau livre</a>
 <ul>
-{% for book in books %}
-    <li><a href='{{path('app_admin_book_show',{"id":book.id})}}'>{{book.title}}</a></li>
+{% for livre in livres %}
+    <li><a href='{{path('app_admin_book_show',{"id":livre.id})}}'>{{livre.titre}}</a></li>
 {% endfor %}
 </ul>
 {% endblock %}

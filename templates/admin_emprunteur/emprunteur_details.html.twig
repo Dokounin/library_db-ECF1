@@ -15,7 +15,7 @@
 <ul>
 {% for emprunt in emprunteur.emprunts %}
 <li>Le {{emprunt.dateEmprunt|date('d-m-Y')}}</li>
-    <li>{{emprunt.book.title}}</li>
+    <li>{{emprunt.livre.titre}}</li>
     {% if emprunt.dateRetour == null %}
         <li>Non rendu</li>
         {% else %}

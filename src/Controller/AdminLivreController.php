@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Livre;
-use App\Form\BookType;
+use App\Form\LivreType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\LivreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,67 +14,65 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminLivreController extends AbstractController
 {
     #[Route('/admin/book', name: 'app_admin_book')]
-    public function index(LivreRepository $bookRepository): Response
+    public function index(LivreRepository $livreRepository): Response
     {
         return $this->render('admin_book/index.html.twig', [
             'controller_name' => 'AdminLivreController',
-            'books'=>$bookRepository->findAll()
+            'livres' => $livreRepository->findAll()
         ]);
     }
-    #[Route('/new',name: 'app_admin_book_new', methods:['GET','POST'])]
-    public function new(Request $request, LivreRepository $bookRepository):Response
+    #[Route('/new', name: 'app_admin_book_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, LivreRepository $livreRepository): Response
     {
-        $book = new Livre();
-        $form= $this->createForm(LivreType::class,$book);
+        $livre = new Livre();
+        $form = $this->createForm(LivreType::class, $livre);
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) { 
 
-            $bookRepository->add($book,true);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $livreRepository->add($livre, true);
 
             return $this->redirectToRoute('app_admin_book', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('admin_book/new.html.twig',[
-            'book'=>$book,
-            'form'=>$form,
+        return $this->renderForm('admin_book/new.html.twig', [
+            'livre' => $livre,
+            'form' => $form,
         ]);
     }
-    #[Route('/{id}',name:'app_admin_book_show',methods:['GET'])]
-    public function show(Livre $book):Response
+    #[Route('/{id}', name: 'app_admin_book_show', methods: ['GET'])]
+    public function show(Livre $livre): Response
     {
 
         return $this->render('admin_book/book_details.html.twig', [
-            'book'=>$book,
-            'auteurs'=>$book->getAuteur(),
+            'livre' => $livre,
+            'auteurs' => $livre->getAuteur(),
         ]);
     }
-    #[Route('/{id}/edit',name:'app_admin_book_edit',methods:['GET','POST'])]
-    public function edit(Livre $book,Request $request,LivreRepository $bookRepository):Response
+    #[Route('/{id}/edit', name: 'app_admin_book_edit', methods: ['GET', 'POST'])]
+    public function edit(Livre $livre, Request $request, LivreRepository $livreRepository): Response
     {
-        $form= $this->createForm(BookType::class,$book);
+        $form = $this->createForm(LivreType::class, $livre);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            $bookRepository->add($book, true);
+            $livreRepository->add($livre, true);
             return $this->redirectToRoute('app_admin_book', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin_book/book_edit.html.twig', [
-            'book'=>$book,
-            'form'=>$form->createView(),
+            'livre' => $livre,
+            'form' => $form->createView(),
         ]);
     }
-    #[Route('/{id}',name:'app_admin_book_delete',methods:['POST'])]
-    public function delete(LivreRepository $bookRepository, Livre $book,Request $request):Response
-    {        
-        if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->request->get('_token'))) {
-        $bookRepository->remove($book, true);
-    }
+    #[Route('/{id}', name: 'app_admin_book_delete', methods: ['POST'])]
+    public function delete(LivreRepository $livreRepository, Livre $livre, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $livre->getId(), $request->request->get('_token'))) {
+            $livreRepository->remove($livre, true);
+        }
 
 
         return $this->redirectToRoute('app_admin_book', [], Response::HTTP_SEE_OTHER);
     }
 }
-
-

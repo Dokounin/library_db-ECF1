@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 {% block body %}
-<h1>{{emprunt.book.title}}</h1>
+<h1>{{emprunt.livre.titre}}</h1>
 <ul>
 <li> Emprunté par {{emprunt.emprunteur.nom}} {{emprunt.emprunteur.prenom}} </li>
 <li>Emprunté le {{emprunt.dateEmprunt|date('d-m-Y') }}</li>

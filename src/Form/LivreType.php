@@ -17,12 +17,12 @@ class LivreType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('annee_edition')
-            ->add('nombre_pages')
+            ->add('titre')
+            ->add('anne_edition')
+            ->add('nombres_pages')
             ->add('code_isbn')
-            ->add('auteur',EntityType::class,[
-                'class'=>Auteur::class,
+            ->add('auteur', EntityType::class, [
+                'class' => Auteur::class,
 
                 'choice_label' => function (Auteur $object) {
                     return "({$object->getId()}) {$object->getPrenom()} {$object->getNom()} ";
@@ -63,8 +63,7 @@ class LivreType extends AbstractType
                 'attr' => [
                     'class' => 'checkboxes-with-scroll',
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

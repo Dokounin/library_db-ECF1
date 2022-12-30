@@ -14,35 +14,36 @@ use Symfony\Component\Routing\Annotation\Route;
 class AcceuilController extends AbstractController
 {
     #[Route('/', name: 'acceuil')]
-    public function index(LivreRepository $bookRepository, Request $request): Response
+    public function index(LivreRepository $livreRepository, Request $request): Response
     {
-        $books=$bookRepository->findAll();
+        $livres = $livreRepository->findAll();
 
-        $form=$this->createForm(SearchLivreType::class);
+        $form = $this->createForm(SearchLivreType::class);
 
-        $search=$form->handleRequest($request);
+        $search = $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            $books=$bookRepository->filter($search->get('mot')->getData());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $livres = $livreRepository->filter($search->get('mot')->getData());
         }
 
         return $this->render('acceuil/index.html.twig', [
             'controller_name' => 'AcceuilController',
-            'books'=>$books,
-            'form'=>$form->createView()
+            'livres' => $livres,
+            'form' => $form->createView()
         ]);
     }
     #[Route(path: 'livre/{id}', name: 'book_details')]
-    public function bookDetail(Livre $book, AuteurRepository $auteurRepository): Response
+    public function bookDetail(Livre $livre, AuteurRepository $auteurRepository): Response
     {
-        
-        return $this->render('acceuil/book_details.html.twig',[
-            
-            'book'=>$book,
-            'auteurs'=>$book->getAuteur(),
-        ]
-            
+
+        return $this->render(
+            'acceuil/book_details.html.twig',
+            [
+
+                'livre' => $livre,
+                'auteurs' => $livre->getAuteur(),
+            ]
+
         );
     }
 }
-

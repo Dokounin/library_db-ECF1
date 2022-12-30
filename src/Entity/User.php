@@ -6,33 +6,42 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    #[Groups(['read', 'write'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
     private ?int $id = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
+    #[Groups(['read'])]
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column(nullable: false)]
     private ?bool $enabled = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+
+    #[Groups(['read', 'write'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 

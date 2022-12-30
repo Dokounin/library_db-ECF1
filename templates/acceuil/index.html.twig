@@ -8,17 +8,17 @@
     Acceuil
     {{form(form)}}
     </section>
-    {% if books|length == 0 %}
+    {% if livres|length == 0 %}
     <p>Aucun resultats</p>
     <a class='btn btn-primary' href={{path('acceuil')}}>Retour à la liste de livre</a>
     {% else %}
     <ul>
-    {% for book in books %}
-        <li><a href='{{path('book_details',{"id":book.id})}}'>{{book.title}}</a></li>
-        {% if  book.emprunts|length == 0 %}
+    {% for livre in livres %}
+        <li><a href='{{path('book_details',{"id":livre.id})}}'>{{livre.titre}}</a></li>
+        {% if  livre.emprunts|length == 0 %}
 <li> disponible </li>
 {% endif %}
-{% for emprunt in book.emprunts %}
+{% for emprunt in livre.emprunts %}
 {% if emprunt.dateRetour == null %}
 <li> indisponible </li>
 {% else %}

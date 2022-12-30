@@ -20,9 +20,8 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('password',PasswordType::class)
-            ->add('enable', CheckboxType::class)
-        ;
+            ->add('password', PasswordType::class)
+            ->add('enabled', CheckboxType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

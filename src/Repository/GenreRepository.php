@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Genre;
+use App\Entity\Livre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,28 +40,57 @@ class GenreRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Genre[] Returns an array of Genre objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('g.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Genre[] Returns an array of Genre objects
+     */
+    public function findByKeyword(string $keyword): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join(Livre::class, 'l')
+            ->andWhere('g.nom LIKE :genre')
 
-//    public function findOneBySomeField($value): ?Genre
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+            ->setParameter('genre', "%{$keyword}%")
+            ->orderBy('g.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Genre[] Returns an array of Genre objects
+     */
+    public function findByBook(Livre $livre): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join("g.livres", "l")
+            ->andWhere('l.id = :val')
+            ->setParameter('val', $livre->getId())
+            ->orderBy('g.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+    //    /**
+    //     * @return Genre[] Returns an array of Genre objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('g')
+    //            ->andWhere('g.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('g.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Genre
+    //    {
+    //        return $this->createQueryBuilder('g')
+    //            ->andWhere('g.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
